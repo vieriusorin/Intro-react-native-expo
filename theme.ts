@@ -8,5 +8,8 @@ export const theme = {
         info: '#0d6efd',
         light: '#f8f9fa',
         dark: '#212529',
+        gray: '#ccc',
+        grayLight: '#f0f0f0',
+        grayDark: '#333',
     }
 }
