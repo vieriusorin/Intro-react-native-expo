@@ -1,7 +1,18 @@
-import React, {  FlatList, StatusBar, StyleSheet, Text, View } from 'react-native';
+import {  FlatList, StatusBar, StyleSheet, Text, View } from 'react-native';
 import { ShoppingListItem } from '../components/ShoppingListItem';
 import { useShoppingList } from '../hooks/useShoppingList';
 import { Input } from '../components/ui/Input';
+import { ShoppingListItemType } from '../types';
+
+const orderShoppingList = (items: ShoppingListItemType[]) => {
+  return items.sort((a, b) => {
+    if (a.completedAt && !b.completedAt) return 1;
+    if (!a.completedAt && b.completedAt) return -1;
+    if (a.lastUpdated && !b.lastUpdated) return 1;
+    if (!a.lastUpdated && b.lastUpdated) return -1;
+    return 0;
+  });
+};
 
 export default function App() {
   const { value, items, handleSubmit, setValue, onDelete, onToggleComplete } = useShoppingList();
@@ -12,10 +23,10 @@ export default function App() {
         onChangeText={setValue}
         onSubmitEditing={handleSubmit}
       />
-      
+       
       <FlatList
         style={styles.flatList}
-        data={items}
+        data={orderShoppingList(items)}
         renderItem={({ item }) => <ShoppingListItem 
           name={item.name} 
           onDelete={onDelete(item.id)}
@@ -28,11 +39,11 @@ export default function App() {
     </View>
   );
 }
-
+ 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: StatusBar.currentHeight + 10,
+    paddingTop: (StatusBar?.currentHeight ?? 0) + 10,
     backgroundColor: '#efefef',
     paddingHorizontal: 20,
   },

@@ -1,7 +1,8 @@
 export type ShoppingListItemType = Readonly<{
     id: string;
     name: string;
-    completedAt?: number
+    completedAt?: number;
+    lastUpdated?: number;
   }>
 
 export  type TShoppingListItemProps = {
