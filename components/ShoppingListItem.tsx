@@ -1,62 +1,51 @@
-import React, { View, Alert, Text, TouchableOpacity, StyleSheet } from "react-native";
+import React, {  Alert, Text, TouchableOpacity, StyleSheet, Pressable } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
 import { theme } from "../theme";
+import { TShoppingListItemProps } from "../types";
 
-type Props = {
-    name: string;
-    isCompleted?: boolean;
-}
-
-export function ShoppingListItem({name, isCompleted = false}: Props) {
-    const handleConfirm = () => {
-        console.log('ok, I will not delete it')
-      }
-      const handleDelete = () => {
-        Alert.alert('Delete', `Are you sure you want to delete ${name}?`, [
-          {
-            text: 'Cancel',
-            style: 'cancel',
-          },
-          {
-            text: 'Delete',
-            style: 'destructive',
-            onPress: () => handleConfirm()
-          }
-        ])
+export function ShoppingListItem({name, isCompleted = false, onDelete, onToggleComplete}: TShoppingListItemProps) {
+    const handleDelete = () => {
+      Alert.alert('Delete', `Are you sure you want to delete ${name}?`, [
+        {
+          text: 'Cancel',
+          style: 'cancel',
+        },
+        {
+          text: 'Delete',
+          style: 'destructive',
+          onPress: () => onDelete()
+        }
+      ])
     }
 
     return (
-        <View style={[styles.container, isCompleted && styles.completed]}>
-            <Text style={[styles.text, isCompleted && styles.completedText]}>
-                {name}
-            </Text>
-            <TouchableOpacity style={styles.button} onPress={handleDelete} activeOpacity={0.8}>
-                <AntDesign name="closecircle" size={18} color={!isCompleted ? theme.colors.danger : theme.colors.grayDark} />
-            </TouchableOpacity>
-        </View>
+      <Pressable 
+        style={[styles.container, isCompleted && styles.completed]}
+        onPress={onToggleComplete}
+      >
+          <Text 
+            numberOfLines={1}
+            ellipsizeMode="tail"
+            style={[styles.text, isCompleted && styles.completedText]}>
+              {name}
+          </Text>
+          <TouchableOpacity style={styles.button} onPress={handleDelete} activeOpacity={0.8}>
+              <AntDesign name={isCompleted ? 'checkcircle' : 'closecircle'} size={18} color={!isCompleted ? theme.colors.danger : theme.colors.green} />
+          </TouchableOpacity>
+      </Pressable>
     )
 }
 
 const styles = StyleSheet.create({
     container: {
         flexDirection: 'row',
-        alignItems: 'center',
+        flex: 1,
         justifyContent: 'space-between',
         gap: 10,
-        width: '100%',
         borderBottomWidth: 1,
         borderBottomColor: '#ccc',
         paddingHorizontal: 20,
         paddingVertical: 10,
-    },
-    toggle: {
-        paddingHorizontal: 20,
-        paddingVertical: 10,
-        fontSize: 16,
-        fontWeight: 'bold',
-        color: '#ffffff',
-        backgroundColor: theme.colors.grayDark,
-        justifyContent: 'center',
     },
     completedText: {
         textDecorationLine: 'line-through',
@@ -72,6 +61,7 @@ const styles = StyleSheet.create({
       fontSize: 16,
       fontWeight: 'bold',
       color: '#000000',
+      flex: 1
     },
     button: {
       paddingHorizontal: 10,
@@ -82,10 +72,4 @@ const styles = StyleSheet.create({
       justifyContent: 'center',
       borderRadius: 6
     },
-    buttonText: {
-      color: theme.colors.light,
-      fontWeight: 'bold',
-      textTransform: 'uppercase',
-      letterSpacing: 1
-    }
   });
