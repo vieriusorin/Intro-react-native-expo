@@ -1,8 +1,15 @@
-import {  FlatList, StatusBar, StyleSheet, Text, View } from 'react-native';
+import {  Platform, UIManager, FlatList, StatusBar, StyleSheet, Text, View } from 'react-native';
 import { ShoppingListItem } from '../components/ShoppingListItem';
 import { useShoppingList } from '../hooks/useShoppingList';
 import { Input } from '../components/ui/Input';
 import { ShoppingListItemType } from '../types';
+
+// Enable LayoutAnimation on Android
+if (Platform.OS === 'android') {
+  if (UIManager.setLayoutAnimationEnabledExperimental) {
+    UIManager.setLayoutAnimationEnabledExperimental(true);
+  }
+}
 
 const orderShoppingList = (items: ShoppingListItemType[]) => {
   return items.sort((a, b) => {
